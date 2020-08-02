@@ -26,5 +26,4 @@ class ListingViewHolder(val binding: ListingItemBinding) : RecyclerView.ViewHold
     fun bind(campaign: Campaign) {
         binding.campaign = campaign
     }
-
 }

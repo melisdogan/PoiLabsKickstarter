@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -9,18 +9,86 @@
             type="com.example.poilabskickstarter.data.model.Campaign" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        app:cardElevation="4dp"
+        app:contentPadding="4dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{Campaign.toString()}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/listing_item_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{Campaign.title}"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/listing_item_blurb"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/listing_item_blurb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{Campaign.blurb}"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toTopOf="@+id/listing_item_numofbackers"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/listing_item_title" />
+
+            <TextView
+                android:id="@+id/listing_item_numofbackers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{Campaign.numberOfBackers + ` backers`}"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toTopOf="@id/listing_item_progressbar"
+                app:layout_constraintEnd_toStartOf="@+id/listing_item_pledged"
+                app:layout_constraintHorizontal_bias="0.40"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/listing_item_blurb" />
+
+            <TextView
+                android:id="@+id/listing_item_pledged"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{Campaign.currency.toUpperCase() + Campaign.amountPledged + ` pledged`}"
+                android:textSize="10sp"
+                app:layout_constraintEnd_toStartOf="@id/listing_item_percentage"
+                app:layout_constraintHorizontal_bias="0.40"
+                app:layout_constraintStart_toEndOf="@+id/listing_item_numofbackers"
+                app:layout_constraintTop_toBottomOf="@+id/listing_item_blurb" />
+
+            <TextView
+                android:id="@+id/listing_item_percentage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{Campaign.percentageFunded + `%`}"
+                android:textSize="10sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.20"
+                app:layout_constraintStart_toEndOf="@+id/listing_item_pledged"
+                app:layout_constraintTop_toBottomOf="@+id/listing_item_blurb" />
+
+            <ProgressBar
+                android:id="@+id/listing_item_progressbar"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:progress="@{Campaign.percentageFunded}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/listing_item_numofbackers" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
 </layout>

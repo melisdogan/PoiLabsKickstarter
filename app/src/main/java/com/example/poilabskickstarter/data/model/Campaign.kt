@@ -11,7 +11,7 @@ data class Campaign(
     @SerializedName(value = "by")
     val author: String,
     val country: String,
-    val currency: String,
+    var currency: String,
     @SerializedName(value = "end.time")
     val endTime: String,
     val location: String,

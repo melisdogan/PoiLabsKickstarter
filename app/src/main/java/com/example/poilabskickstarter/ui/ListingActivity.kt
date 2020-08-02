@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.poilabskickstarter.R
 import com.example.poilabskickstarter.databinding.ActivityListingBinding
+import java.util.*
 
 class ListingActivity : AppCompatActivity() {
     private lateinit var viewModel: ListingViewModel
@@ -19,6 +20,9 @@ class ListingActivity : AppCompatActivity() {
         binding.listingRecyclerview.layoutManager = LinearLayoutManager(this)
         binding.listingRecyclerview.setHasFixedSize(true)
         viewModel.campaignList.observe(this, Observer {
+            it.forEach { campaign ->
+                campaign.currency = Currency.getInstance(campaign.currency).symbol
+            }
             binding.listingRecyclerview.adapter = ListingAdapter(it)
         })
         viewModel.getCampaigns()
