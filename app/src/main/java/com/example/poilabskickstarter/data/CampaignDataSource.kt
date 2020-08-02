@@ -1,6 +1,5 @@
 package com.example.poilabskickstarter.data
 
-import android.util.Log
 import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.JSONArrayRequestListener
@@ -21,7 +20,7 @@ class CampaignDataSource {
                 }
 
                 override fun onError(anError: ANError?) {
-                    Log.d("datasource", "error")
+                    callback(arrayListOf())
                 }
             })
     }
