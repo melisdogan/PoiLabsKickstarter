@@ -1,6 +1,8 @@
 package com.example.poilabskickstarter.ui
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -18,7 +20,26 @@ class ListingActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(ListingViewModel::class.java)
         binding.listingRecyclerview.layoutManager = LinearLayoutManager(this)
         binding.listingRecyclerview.setHasFixedSize(true)
-        val adapter = ListingAdapter()
+        val adapter = ListingAdapter(ListingListener {
+            val intent = Intent(this, CampaignActivity::class.java)
+            intent.putExtra("Campaign", it)
+            startActivity(intent)
+        })
+        binding.listingSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                viewModel.searchThroughCampaigns(query!!)
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return true
+            }
+        })
+        binding.listingSearch.setOnCloseListener {
+            viewModel.searchThroughCampaigns("")
+            true
+        }
+
         /*viewModel.campaignList.observe(this, Observer {
 
             binding.listingRecyclerview.adapter = ListingAdapter(it)

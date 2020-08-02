@@ -1,7 +1,10 @@
 package com.example.poilabskickstarter.data.model
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class Campaign(
     @SerializedName(value = "s.no")
     val id: Int,
@@ -23,4 +26,4 @@ data class Campaign(
     val title: String,
     val type: String,
     val url: String
-)
+) : Parcelable

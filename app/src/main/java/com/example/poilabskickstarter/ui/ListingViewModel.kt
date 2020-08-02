@@ -11,24 +11,30 @@ import java.util.*
 
 
 class ListingViewModel : ViewModel() {
-
+    lateinit var sourceFactory: ListingDataSourceFactory
+    lateinit var listingLiveData: LiveData<PagedList<Campaign>>
     fun getCampaigns(callback: (LiveData<PagedList<Campaign>>) -> Unit) {
         App.campaignRepository.getCampaigns {
             // empty list if error
             it.forEach { campaign ->
                 campaign.currency = Currency.getInstance(campaign.currency).symbol
             }
-            val sourceFactory = ListingDataSourceFactory(it)
+            sourceFactory = ListingDataSourceFactory(it)
             val config = PagedList.Config.Builder()
                 .setEnablePlaceholders(false)
                 .setPageSize(20)
                 .setInitialLoadSizeHint(20)
                 .setPrefetchDistance(5)
                 .build()
-            val listingLiveData = LivePagedListBuilder(sourceFactory, config)
+            listingLiveData = LivePagedListBuilder(sourceFactory, config)
                 .build()
             callback(listingLiveData)
         }
 
+    }
+
+    fun searchThroughCampaigns(keyword: String) {
+        sourceFactory.search(keyword)
+        listingLiveData.value?.dataSource?.invalidate()
     }
 }
