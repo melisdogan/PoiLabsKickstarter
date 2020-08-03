@@ -10,19 +10,149 @@
             type="com.example.poilabskickstarter.data.model.Campaign" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
         tools:context=".ui.CampaignActivity">
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{Campaign.toString()}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:fitsSystemWindows="true">
+
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:contentScrim="?attr/colorPrimary"
+                app:expandedTitleMarginEnd="56dp"
+                app:expandedTitleMarginStart="40dp"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                app:title="@{Campaign.title}">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/catondesk"
+                    app:layout_collapseMode="parallax" />
+
+                <com.google.android.material.appbar.MaterialToolbar
+                    android:id="@+id/campaign_toolbar"
+                    style="@style/ThemeOverlay.MaterialComponents.Light"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:layout_collapseMode="pin" />
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/campaign_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{Campaign.title}"
+                    android:textAlignment="center"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/campaign_author"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/campaign_author"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{Campaign.author}"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toTopOf="@+id/campaign_progressbar"
+                    app:layout_constraintEnd_toStartOf="@+id/campaign_location"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/campaign_title" />
+
+                <TextView
+                    android:id="@+id/campaign_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{Campaign.location}"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toTopOf="@+id/campaign_progressbar"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/campaign_author"
+                    app:layout_constraintTop_toBottomOf="@+id/campaign_title" />
+
+                <ProgressBar
+                    android:id="@+id/campaign_progressbar"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:progress="@{Campaign.percentageFunded}"
+                    app:layout_constraintBottom_toTopOf="@+id/campaign_backers"
+                    app:layout_constraintTop_toBottomOf="@+id/campaign_author" />
+
+                <TextView
+                    android:id="@+id/campaign_backers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{Campaign.numberOfBackers + ` backers`}"
+                    android:textSize="13sp"
+                    app:layout_constraintBottom_toTopOf="@+id/campaign_blurb"
+                    app:layout_constraintEnd_toStartOf="@+id/campaign_pledged"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/campaign_progressbar" />
+
+                <TextView
+                    android:id="@+id/campaign_pledged"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{Campaign.currency.toUpperCase() + Campaign.amountPledged + ` pledged`}"
+                    android:textSize="13sp"
+                    app:layout_constraintBottom_toTopOf="@+id/campaign_blurb"
+                    app:layout_constraintEnd_toStartOf="@+id/campaign_percentage"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/campaign_backers"
+                    app:layout_constraintTop_toBottomOf="@+id/campaign_progressbar" />
+
+                <TextView
+                    android:id="@+id/campaign_percentage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{Campaign.percentageFunded + `%`}"
+                    android:textSize="13sp"
+                    app:layout_constraintBottom_toTopOf="@+id/campaign_blurb"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/campaign_pledged"
+                    app:layout_constraintTop_toBottomOf="@+id/campaign_progressbar" />
+
+                <TextView
+                    android:id="@+id/campaign_blurb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{Campaign.blurb}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/campaign_backers" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
 </layout>

@@ -12,6 +12,32 @@
         android:layout_height="match_parent"
         tools:context=".ui.ListingActivity">
 
+        <Button
+            android:id="@+id/filter_button"
+            style="@style/Widget.AppCompat.Button.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_baseline_filter_list_24"
+            app:layout_constraintBottom_toTopOf="@+id/listing_recyclerview"
+            app:layout_constraintEnd_toStartOf="@+id/sort_button"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/listing_search"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/sort_button"
+            style="@style/Widget.AppCompat.Button.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/ic_baseline_sort_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/listing_recyclerview"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/filter_button" />
+
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/listing_recyclerview"
             android:layout_width="match_parent"
@@ -23,11 +49,14 @@
 
         <SearchView
             android:id="@+id/listing_search"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toTopOf="@+id/listing_recyclerview"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/filter_button"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+        </SearchView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
