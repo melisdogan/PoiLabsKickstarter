@@ -3,6 +3,8 @@ package com.example.poilabskickstarter.ui
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
@@ -21,34 +23,16 @@ class ListingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_listing)
+        setSupportActionBar(binding.toolbar)
         viewModel = ViewModelProvider(this).get(ListingViewModel::class.java)
-        binding.listingRecyclerview.layoutManager = LinearLayoutManager(this)
-        binding.listingRecyclerview.setHasFixedSize(true)
-        binding.listingSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                viewModel.removeFilter("search")
-                viewModel.searchThroughCampaigns(keyword = query!!)
-                return true
-            }
+        binding.contentListing.listingRecyclerview.layoutManager = LinearLayoutManager(this)
+        binding.contentListing.listingRecyclerview.setHasFixedSize(true)
 
-            override fun onQueryTextChange(newText: String?): Boolean {
-                return true
-            }
-        })
-        binding.listingSearch.setOnCloseListener {
-            viewModel.removeFilter("search")
-            false
-        }
-        binding.filtersText.setOnClickListener {
-            binding.filtersText.visibility = View.GONE
+        binding.contentListing.filtersText.setOnClickListener {
+            binding.contentListing.filtersText.visibility = View.GONE
             viewModel.removeFilter("filter")
         }
-        binding.sortButton.setOnClickListener {
-            dialogBuild(it)
-        }
-        binding.filterButton.setOnClickListener {
-            dialogBuild(it)
-        }
+
         val adapter = ListingAdapter(ListingListener {
             val intent = Intent(this, CampaignActivity::class.java)
             intent.putExtra("Campaign", it)
@@ -59,13 +43,47 @@ class ListingActivity : AppCompatActivity() {
                 adapter.submitList(list)
             })
         }
-        binding.listingRecyclerview.adapter = adapter
+        binding.contentListing.listingRecyclerview.adapter = adapter
     }
 
-    private fun dialogBuild(view: View) {
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.listing_toolbar_menu, menu)
+        val searchView = menu?.findItem(R.id.listing_search)?.actionView as SearchView
+        searchView.setOnCloseListener {
+            viewModel.removeFilter("search")
+            false
+        }
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                viewModel.removeFilter("search")
+                viewModel.searchThroughCampaigns(keyword = query!!)
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return true
+            }
+        })
+        searchView.maxWidth = 400
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.title) {
+            "sort" -> {
+                dialogBuild("sort")
+            }
+            "filter" -> {
+                dialogBuild("filter")
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun dialogBuild(key: String) {
         val dialog = AlertDialog.Builder(this).create()
-        when (view.id) {
-            R.id.filter_button -> {
+        when (key) {
+            "filter" -> {
                 val dialogBinding: FilterDialogBinding =
                     DataBindingUtil.inflate(layoutInflater, R.layout.filter_dialog, null, false)
                 dialog.setView(dialogBinding.root)
@@ -93,7 +111,7 @@ class ListingActivity : AppCompatActivity() {
                     dialog.dismiss()
                 }
             }
-            R.id.sort_button -> {
+            "sort" -> {
                 val dialogBinding: SortDialogBinding =
                     DataBindingUtil.inflate(layoutInflater, R.layout.sort_dialog, null, false)
                 dialog.setView(dialogBinding.root)
@@ -117,8 +135,8 @@ class ListingActivity : AppCompatActivity() {
     }
 
     private fun filterEnabled(filterStart: Int?, filterEnd: Int?) {
-        binding.filtersText.visibility = View.VISIBLE
-        binding.filterStart = filterStart
-        binding.filterEnd = filterEnd
+        binding.contentListing.filtersText.visibility = View.VISIBLE
+        binding.contentListing.filterStart = filterStart
+        binding.contentListing.filterEnd = filterEnd
     }
 }

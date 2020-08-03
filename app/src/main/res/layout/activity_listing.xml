@@ -14,79 +14,43 @@
             type="Integer" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.ListingActivity">
 
-        <Button
-            android:id="@+id/filter_button"
-            style="@style/Widget.AppCompat.Button.Small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/ic_baseline_filter_list_24"
-            app:layout_constraintBottom_toTopOf="@+id/filters_text"
-            app:layout_constraintEnd_toStartOf="@+id/sort_button"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/listing_search"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
-            android:id="@+id/sort_button"
-            style="@style/Widget.AppCompat.Button.Small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/ic_baseline_sort_24"
-            app:layout_constraintBottom_toTopOf="@+id/filters_text"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/filter_button"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <SearchView
-            android:id="@+id/listing_search"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:queryHint="@string/search"
-            app:layout_constraintBottom_toTopOf="@+id/filters_text"
-            app:layout_constraintEnd_toStartOf="@+id/filter_button"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <LinearLayout
-            android:id="@+id/filters_text"
+        <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@id/listing_recyclerview"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/listing_search"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:visibility="gone"
-            android:clickable="true"
-            android:focusable="true">
+            android:layout_height="wrap_content">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{`Enabled filters: ` + filterStart + ` - ` + filterEnd + `. Click to remove the filters.`}"
-                android:textSize="10sp"
-                android:layout_gravity="center_horizontal" />
-        </LinearLayout>
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:background="#FFFFFF"
+                android:elevation="2dp"
+                android:layout_height="?attr/actionBarSize"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/listing_recyclerview"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/filters_text" />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:src="@drawable/app_logo" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.AppBarLayout>
 
+        <include
+            layout="@layout/content_listing_activity"
+            android:id="@+id/content_listing"
+            app:filterStart="@{filterStart}"
+            app:filterEnd="@{filterEnd}" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
