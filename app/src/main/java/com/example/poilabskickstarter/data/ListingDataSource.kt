@@ -28,18 +28,62 @@ class ListingDataSource(private val listings: List<Campaign>) : PositionalDataSo
 class ListingDataSourceFactory(private val listings: List<Campaign>) :
     DataSource.Factory<Int, Campaign>() {
     private var keyword = ""
+    private var filterStart = 0
+    private var filterEnd = -1
+    private var sort = "id"
     override fun create(): DataSource<Int, Campaign> {
-        if (keyword != "") {
-            val result = listings.filter {
+        var result = listings.toMutableList()
+        /*var result = if (keyword != "") {
+            listings.filter {
                 it.title.toLowerCase().contains(keyword)
             }
-            return ListingDataSource(result)
         } else {
-            return ListingDataSource(listings)
+            listings
         }
+        try {
+            var result = if (filterEnd != -1) {
+                result.filter {
+                    it.numberOfBackers.toInt() in (filterStart) until filterEnd
+                }
+            } else {
+                result
+            }
+        } catch (e: NumberFormatException) {
+            Log.d("ListingDataSource", "Not a numeric value")
+        }
+        when (sort) {
+            "id" -> Collections.sort(result) { o1, o2 -> o1!!.id.compareTo(o2!!.id) }
+            "alphabetical" -> Collections.sort(result) { o1, o2 -> o1!!.title.compareTo(o2!!.title) }
+            "percentage" -> Collections.sort(result) { o1, o2 -> o1!!.percentageFunded.compareTo(o2!!.percentageFunded) }
+        }*/
+        if (keyword != "") {
+            result.removeIf {
+                !it.title.toLowerCase().contains(keyword)
+            }
+        }
+
+        if (filterEnd != -1) {
+            result.removeIf {
+                !it.numberOfBackers.matches("\\d+(\\.\\d+)?".toRegex()) || it.numberOfBackers.toInt() > filterEnd || it.numberOfBackers.toInt() < filterStart
+            }
+        }
+
+        when (sort) {
+            "id" -> result.sortWith(Comparator { o1, o2 -> o1!!.id.compareTo(o2!!.id) })
+            "alphabetical" -> result.sortWith(Comparator { o1, o2 -> o1!!.title.compareTo(o2!!.title) })
+            "percentage" -> result.sortWith(Comparator { o1, o2 ->
+                o1!!.percentageFunded.compareTo(
+                    o2!!.percentageFunded
+                )
+            })
+        }
+        return ListingDataSource(result)
     }
 
-    fun search(keyword: String) {
+    fun search(keyword: String = "", sort: String = "id", start: Int = 0, end: Int = -1) {
         this.keyword = keyword
+        this.sort = sort
+        filterStart = start
+        filterEnd = end
     }
 }

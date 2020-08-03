@@ -1,7 +1,9 @@
 package com.example.poilabskickstarter.ui
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -10,6 +12,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.poilabskickstarter.R
 import com.example.poilabskickstarter.databinding.ActivityListingBinding
+import com.example.poilabskickstarter.databinding.FilterDialogBinding
+import com.example.poilabskickstarter.databinding.SortDialogBinding
 
 class ListingActivity : AppCompatActivity() {
     private lateinit var viewModel: ListingViewModel
@@ -20,14 +24,9 @@ class ListingActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(ListingViewModel::class.java)
         binding.listingRecyclerview.layoutManager = LinearLayoutManager(this)
         binding.listingRecyclerview.setHasFixedSize(true)
-        val adapter = ListingAdapter(ListingListener {
-            val intent = Intent(this, CampaignActivity::class.java)
-            intent.putExtra("Campaign", it)
-            startActivity(intent)
-        })
         binding.listingSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                viewModel.searchThroughCampaigns(query!!)
+                viewModel.searchThroughCampaigns(keyword = query!!)
                 return true
             }
 
@@ -36,19 +35,66 @@ class ListingActivity : AppCompatActivity() {
             }
         })
         binding.listingSearch.setOnCloseListener {
-            viewModel.searchThroughCampaigns("")
+            viewModel.searchThroughCampaigns()
             true
         }
-
-        /*viewModel.campaignList.observe(this, Observer {
-
-            binding.listingRecyclerview.adapter = ListingAdapter(it)
-        })*/
+        binding.sortButton.setOnClickListener {
+            dialogBuild(it)
+        }
+        binding.filterButton.setOnClickListener {
+            dialogBuild(it)
+        }
+        val adapter = ListingAdapter(ListingListener {
+            val intent = Intent(this, CampaignActivity::class.java)
+            intent.putExtra("Campaign", it)
+            startActivity(intent)
+        })
         viewModel.getCampaigns {
             it.observe(this, Observer { list ->
                 adapter.submitList(list)
             })
         }
         binding.listingRecyclerview.adapter = adapter
+    }
+
+    private fun dialogBuild(view: View) {
+        val dialog = AlertDialog.Builder(this).create()
+        when (view.id) {
+            R.id.filter_button -> {
+                val dialogBinding: FilterDialogBinding =
+                    DataBindingUtil.inflate(layoutInflater, R.layout.filter_dialog, null, false)
+                dialog.setView(dialogBinding.root)
+                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Filter") { dialog, _ ->
+                    viewModel.searchThroughCampaigns(
+                        start = dialogBinding.filterStart.text.toString().toInt(),
+                        end = dialogBinding.filterEnd.text.toString().toInt()
+                    )
+                    dialog.dismiss()
+                }
+                dialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel") { dialog, _ ->
+                    dialog.dismiss()
+                }
+            }
+            R.id.sort_button -> {
+                val dialogBinding: SortDialogBinding =
+                    DataBindingUtil.inflate(layoutInflater, R.layout.sort_dialog, null, false)
+                dialog.setView(dialogBinding.root)
+                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Sort") { dialog, _ ->
+                    viewModel.searchThroughCampaigns(
+                        sort = when (dialogBinding.sortRadiogroup.checkedRadioButtonId) {
+                            R.id.sort_alphabetically -> "alphabetical"
+                            R.id.sort_percentage -> "percentage"
+                            R.id.sort_id -> "id"
+                            else -> "id"
+                        }
+                    )
+                    dialog.dismiss()
+                }
+                dialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel") { dialog, _ ->
+                    dialog.dismiss()
+                }
+            }
+        }
+        dialog.show()
     }
 }
