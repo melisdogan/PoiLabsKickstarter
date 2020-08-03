@@ -29,7 +29,16 @@ class CampaignRepository(val dataSource: CampaignDataSource) {
         callback(listingLiveData)
     }
 
-    fun searchDataSource(keyword: String = "", sort: String = "id", start: Int = 0, end: Int = -1) {
+    fun searchDataSource(
+        keyword: String? = null,
+        sort: String? = null,
+        start: Int? = null,
+        end: Int? = null
+    ) {
         sourceFactory.search(keyword, sort, start, end)
+    }
+
+    fun removeFilter(filter: String) {
+        sourceFactory.removeFilter(filter)
     }
 }

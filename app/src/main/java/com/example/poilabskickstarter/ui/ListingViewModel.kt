@@ -25,12 +25,14 @@ class ListingViewModel : ViewModel() {
     }
 
     fun searchThroughCampaigns(
-        keyword: String = "",
-        sort: String = "id",
-        start: Int = 0,
-        end: Int = -1
+        keyword: String? = null, sort: String? = null, start: Int? = null, end: Int? = null
     ) {
         App.campaignRepository.searchDataSource(keyword, sort, start, end)
+        listingLiveData.value?.dataSource?.invalidate()
+    }
+
+    fun removeFilter(filter: String) {
+        App.campaignRepository.removeFilter(filter)
         listingLiveData.value?.dataSource?.invalidate()
     }
 }

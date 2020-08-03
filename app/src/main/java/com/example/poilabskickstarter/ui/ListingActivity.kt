@@ -35,8 +35,12 @@ class ListingActivity : AppCompatActivity() {
             }
         })
         binding.listingSearch.setOnCloseListener {
-            viewModel.searchThroughCampaigns()
+            viewModel.removeFilter("search")
             true
+        }
+        binding.filtersText.setOnClickListener {
+            binding.filtersText.visibility = View.GONE
+            viewModel.removeFilter("filter")
         }
         binding.sortButton.setOnClickListener {
             dialogBuild(it)
@@ -69,6 +73,10 @@ class ListingActivity : AppCompatActivity() {
                         start = dialogBinding.filterStart.text.toString().toInt(),
                         end = dialogBinding.filterEnd.text.toString().toInt()
                     )
+                    filterEnabled(
+                        dialogBinding.filterStart.text.toString().toInt(),
+                        dialogBinding.filterEnd.text.toString().toInt()
+                    )
                     dialog.dismiss()
                 }
                 dialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel") { dialog, _ ->
@@ -96,5 +104,11 @@ class ListingActivity : AppCompatActivity() {
             }
         }
         dialog.show()
+    }
+
+    private fun filterEnabled(filterStart: Int, filterEnd: Int) {
+        binding.filtersText.visibility = View.VISIBLE
+        binding.filterStart = filterStart
+        binding.filterEnd = filterEnd
     }
 }

@@ -27,44 +27,21 @@ class ListingDataSource(private val listings: List<Campaign>) : PositionalDataSo
 
 class ListingDataSourceFactory(private val listings: List<Campaign>) :
     DataSource.Factory<Int, Campaign>() {
-    private var keyword = ""
-    private var filterStart = 0
-    private var filterEnd = -1
-    private var sort = "id"
+    private var keyword: String? = null
+    private var filterStart: Int? = null
+    private var filterEnd: Int? = null
+    private var sort: String? = null
     override fun create(): DataSource<Int, Campaign> {
-        var result = listings.toMutableList()
-        /*var result = if (keyword != "") {
-            listings.filter {
-                it.title.toLowerCase().contains(keyword)
-            }
-        } else {
-            listings
-        }
-        try {
-            var result = if (filterEnd != -1) {
-                result.filter {
-                    it.numberOfBackers.toInt() in (filterStart) until filterEnd
-                }
-            } else {
-                result
-            }
-        } catch (e: NumberFormatException) {
-            Log.d("ListingDataSource", "Not a numeric value")
-        }
-        when (sort) {
-            "id" -> Collections.sort(result) { o1, o2 -> o1!!.id.compareTo(o2!!.id) }
-            "alphabetical" -> Collections.sort(result) { o1, o2 -> o1!!.title.compareTo(o2!!.title) }
-            "percentage" -> Collections.sort(result) { o1, o2 -> o1!!.percentageFunded.compareTo(o2!!.percentageFunded) }
-        }*/
-        if (keyword != "") {
+        val result = listings.toMutableList()
+        if (keyword != null) {
             result.removeIf {
-                !it.title.toLowerCase().contains(keyword)
+                !it.title.toLowerCase().contains(keyword!!)
             }
         }
 
-        if (filterEnd != -1) {
+        if (filterEnd != null && filterStart != null) {
             result.removeIf {
-                !it.numberOfBackers.matches("\\d+(\\.\\d+)?".toRegex()) || it.numberOfBackers.toInt() > filterEnd || it.numberOfBackers.toInt() < filterStart
+                !it.numberOfBackers.matches("\\d+(\\.\\d+)?".toRegex()) || it.numberOfBackers.toInt() > filterEnd!! || it.numberOfBackers.toInt() < filterStart!!
             }
         }
 
@@ -76,14 +53,40 @@ class ListingDataSourceFactory(private val listings: List<Campaign>) :
                     o2!!.percentageFunded
                 )
             })
+            null -> result.sortWith(Comparator { o1, o2 -> o1!!.id.compareTo(o2!!.id) })
         }
         return ListingDataSource(result)
     }
 
-    fun search(keyword: String = "", sort: String = "id", start: Int = 0, end: Int = -1) {
-        this.keyword = keyword
-        this.sort = sort
-        filterStart = start
-        filterEnd = end
+    fun search(
+        keyword: String? = null,
+        sort: String? = null,
+        start: Int? = null,
+        end: Int? = null
+    ) {
+        if (keyword != null || this.keyword == null) {
+            this.keyword = keyword
+        }
+        if (sort != null || this.sort == null) {
+            this.sort = sort
+        }
+        if (filterStart != null || filterStart == null) {
+            filterStart = start
+        }
+        if (filterEnd != null || filterEnd == null) {
+            filterEnd = end
+        }
+    }
+
+    fun removeFilter(filter: String) {
+        when (filter) {
+            "filter" -> {
+                filterEnd = null
+                filterStart = null
+            }
+            "search" -> {
+                keyword = null
+            }
+        }
     }
 }
