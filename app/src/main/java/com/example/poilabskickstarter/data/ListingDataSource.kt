@@ -39,9 +39,14 @@ class ListingDataSourceFactory(private val listings: List<Campaign>) :
             }
         }
 
-        if (filterEnd != null && filterStart != null) {
+        if (filterStart != null) {
             result.removeIf {
-                !it.numberOfBackers.matches("\\d+(\\.\\d+)?".toRegex()) || it.numberOfBackers.toInt() > filterEnd!! || it.numberOfBackers.toInt() < filterStart!!
+                !it.numberOfBackers.matches("\\d+(\\.\\d+)?".toRegex()) || it.numberOfBackers.toInt() < filterStart!!
+            }
+        }
+        if (filterEnd != null) {
+            result.removeIf {
+                !it.numberOfBackers.matches("\\d+(\\.\\d+)?".toRegex()) || it.numberOfBackers.toInt() > filterEnd!!
             }
         }
 
@@ -70,10 +75,10 @@ class ListingDataSourceFactory(private val listings: List<Campaign>) :
         if (sort != null || this.sort == null) {
             this.sort = sort
         }
-        if (filterStart != null || filterStart == null) {
+        if (start != null || filterStart == null) {
             filterStart = start
         }
-        if (filterEnd != null || filterEnd == null) {
+        if (end != null || filterEnd == null) {
             filterEnd = end
         }
     }

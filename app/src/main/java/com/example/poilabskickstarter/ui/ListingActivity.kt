@@ -26,6 +26,7 @@ class ListingActivity : AppCompatActivity() {
         binding.listingRecyclerview.setHasFixedSize(true)
         binding.listingSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
+                viewModel.removeFilter("search")
                 viewModel.searchThroughCampaigns(keyword = query!!)
                 return true
             }
@@ -36,7 +37,7 @@ class ListingActivity : AppCompatActivity() {
         })
         binding.listingSearch.setOnCloseListener {
             viewModel.removeFilter("search")
-            true
+            false
         }
         binding.filtersText.setOnClickListener {
             binding.filtersText.visibility = View.GONE
@@ -69,13 +70,22 @@ class ListingActivity : AppCompatActivity() {
                     DataBindingUtil.inflate(layoutInflater, R.layout.filter_dialog, null, false)
                 dialog.setView(dialogBinding.root)
                 dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Filter") { dialog, _ ->
+                    viewModel.removeFilter("filter")
+                    var start: String? = dialogBinding.filterStart.text.toString()
+                    var end: String? = dialogBinding.filterEnd.text.toString()
+                    if (start == "") {
+                        start = null
+                    }
+                    if (end == "") {
+                        end = null
+                    }
                     viewModel.searchThroughCampaigns(
-                        start = dialogBinding.filterStart.text.toString().toInt(),
-                        end = dialogBinding.filterEnd.text.toString().toInt()
+                        start = start?.toInt(),
+                        end = end?.toInt()
                     )
                     filterEnabled(
-                        dialogBinding.filterStart.text.toString().toInt(),
-                        dialogBinding.filterEnd.text.toString().toInt()
+                        start?.toInt(),
+                        end?.toInt()
                     )
                     dialog.dismiss()
                 }
@@ -106,7 +116,7 @@ class ListingActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    private fun filterEnabled(filterStart: Int, filterEnd: Int) {
+    private fun filterEnabled(filterStart: Int?, filterEnd: Int?) {
         binding.filtersText.visibility = View.VISIBLE
         binding.filterStart = filterStart
         binding.filterEnd = filterEnd
