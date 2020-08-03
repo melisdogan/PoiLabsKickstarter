@@ -26,7 +26,7 @@
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:contentScrim="?attr/colorPrimary"
+                app:contentScrim="@color/colorAccent"
                 app:expandedTitleMarginEnd="56dp"
                 app:expandedTitleMarginStart="40dp"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed"
@@ -55,14 +55,17 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:padding="10dp">
 
                 <TextView
                     android:id="@+id/campaign_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:text="@{Campaign.title}"
                     android:textAlignment="center"
+                    android:textColor="@color/colorAccent"
                     android:textSize="17sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toTopOf="@+id/campaign_author"
@@ -74,6 +77,8 @@
                     android:id="@+id/campaign_author"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="5dp"
                     android:text="@{Campaign.author}"
                     android:textSize="12sp"
                     app:layout_constraintBottom_toTopOf="@+id/campaign_progressbar"
@@ -86,6 +91,8 @@
                     android:id="@+id/campaign_location"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="5dp"
                     android:text="@{Campaign.location}"
                     android:textSize="12sp"
                     app:layout_constraintBottom_toTopOf="@+id/campaign_progressbar"
@@ -101,12 +108,15 @@
                     android:layout_height="wrap_content"
                     android:progress="@{Campaign.percentageFunded}"
                     app:layout_constraintBottom_toTopOf="@+id/campaign_backers"
-                    app:layout_constraintTop_toBottomOf="@+id/campaign_author" />
+                    app:layout_constraintTop_toBottomOf="@+id/campaign_author"
+                    tools:layout_editor_absoluteX="10dp" />
 
                 <TextView
                     android:id="@+id/campaign_backers"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
                     android:text="@{Campaign.numberOfBackers + ` backers`}"
                     android:textSize="13sp"
                     app:layout_constraintBottom_toTopOf="@+id/campaign_blurb"
@@ -119,6 +129,8 @@
                     android:id="@+id/campaign_pledged"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
                     android:text="@{Campaign.currency.toUpperCase() + Campaign.amountPledged + ` pledged`}"
                     android:textSize="13sp"
                     app:layout_constraintBottom_toTopOf="@+id/campaign_blurb"
@@ -131,6 +143,8 @@
                     android:id="@+id/campaign_percentage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
                     android:text="@{Campaign.percentageFunded + `%`}"
                     android:textSize="13sp"
                     app:layout_constraintBottom_toTopOf="@+id/campaign_blurb"
@@ -143,12 +157,41 @@
                     android:id="@+id/campaign_blurb"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingStart="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingEnd="10dp"
                     android:text="@{Campaign.blurb}"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/campaign_endtime"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/campaign_backers" />
+
+                <TextView
+                    android:id="@+id/campaign_endtime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="@{`Campaign active until: ` + Campaign.endTime}"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toTopOf="@id/campaign_back_button"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/campaign_blurb" />
+
+                <Button
+                    android:id="@+id/campaign_back_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:background="@color/colorAccent"
+                    android:text="@string/back_this_project"
+                    android:textColor="@android:color/background_light"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/campaign_endtime" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>

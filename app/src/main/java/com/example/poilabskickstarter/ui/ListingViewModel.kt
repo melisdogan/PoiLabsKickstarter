@@ -15,6 +15,7 @@ class ListingViewModel : ViewModel() {
             // empty list if error
             it.forEach { campaign ->
                 campaign.currency = Currency.getInstance(campaign.currency).symbol
+                campaign.endTime = campaign.endTime.replace("T", " ")
             }
             App.campaignRepository.getPagedDataSource(it) {
                 listingLiveData = it

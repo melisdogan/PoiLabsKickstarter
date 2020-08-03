@@ -16,7 +16,7 @@ data class Campaign(
     val country: String,
     var currency: String,
     @SerializedName(value = "end.time")
-    val endTime: String,
+    var endTime: String,
     val location: String,
     @SerializedName(value = "percentage.funded")
     val percentageFunded: Int,
